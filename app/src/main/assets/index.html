@@ -185,7 +185,7 @@ body.rpg .fab{bottom:calc(88px + var(--sa-bottom,0px))}
 .seg-sm button[aria-pressed="true"]{background:var(--surface);color:var(--ink)}
 
 /* full-screen editor (как в Keep) */
-html.ed-open,html.ed-open body{overflow:hidden}
+html.ed-open{overflow:hidden}
 .editor{position:fixed;top:0;left:0;right:0;bottom:var(--kb);z-index:25;background:var(--surface);display:flex;flex-direction:column;transition:bottom .22s var(--ease),background-color .25s}
 .editor.nc-c1{background:var(--n-c1)}.editor.nc-c2{background:var(--n-c2)}.editor.nc-c3{background:var(--n-c3)}.editor.nc-c4{background:var(--n-c4)}.editor.nc-c5{background:var(--n-c5)}
 .ed-top{flex:none;display:flex;align-items:center;gap:2px;padding:calc(6px + var(--sa-top,0px)) max(8px,var(--sa-right,0px)) 4px max(8px,var(--sa-left,0px))}
@@ -929,14 +929,14 @@ function newNote(fromEl){
   const n={id:uid(),title:'',type:'text',body:'',items:[],color:'',pinned:false,archived:false,trashed:false,updated:Date.now(),cat};
   S.notes.push(n);edNew=true;openEditor(n.id,fromEl);
 }
-let edPal=false,edClosing=false;
+let edPal=false,edClosing=false,edScrollY=0;
 const BACK_IC='<svg class="i" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></svg>';
 const PAL_IC='<svg class="i" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.9 0-1.1-1-1.5-1-2.6 0-1 .9-1.5 2.3-1.5H18a3 3 0 0 0 3-3 9 9 0 0 0-9-9z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15.5" cy="7.5" r="1"/></svg>';
 function clipOf(r,ed,rad){const W=ed.clientWidth,H=ed.clientHeight;return`inset(${Math.max(0,r.top)}px ${Math.max(0,W-r.right)}px ${Math.max(0,H-r.bottom)}px ${Math.max(0,r.left)}px round ${rad}px)`}
 function openEditor(id,fromEl){
   if(edClosing)return;
   edId=id;sheetKind='note';edPal=false;drawEditor();
-  const ed=$('#editor');ed.hidden=false;document.documentElement.classList.add('ed-open');
+  const ed=$('#editor');edScrollY=window.scrollY;ed.hidden=false;document.documentElement.classList.add('ed-open');
   if(fromEl&&fromEl.getBoundingClientRect){
     const r=fromEl.getBoundingClientRect(),rad=fromEl.classList.contains('fab')?18:12;
     anim(ed,[{clipPath:clipOf(r,ed,rad)},{clipPath:'inset(0px 0px 0px 0px round 0px)'}],{duration:320});
@@ -986,16 +986,29 @@ function drawEditor(newRow){
   const sc=ed.querySelector('.ed-scroll');if(sc)sc.scrollTop=top;
 }
 function noteEmpty(n){return!n.title.trim()&&!n.body.trim()&&!n.items.some(i=>i.text.trim())}
-function closeEditor(){
+/* ждём, пока клавиатура уедет и экран перестанет менять размер */
+function settleViewport(maxMs){
+  return new Promise(res=>{
+    const vv=window.visualViewport;let quiet=0,doneT=0;
+    const fin=()=>{clearTimeout(quiet);clearTimeout(doneT);window.removeEventListener('resize',bump);if(vv)vv.removeEventListener('resize',bump);res()};
+    const bump=()=>{clearTimeout(quiet);quiet=setTimeout(fin,120)};
+    window.addEventListener('resize',bump);if(vv)vv.addEventListener('resize',bump);
+    quiet=setTimeout(fin,160);doneT=setTimeout(fin,maxMs);
+  });
+}
+async function closeEditor(){
   const ed=$('#editor');if(ed.hidden||edClosing)return;
+  edClosing=true;ed.classList.add('closing');
   const id=edId,n=curNote();
+  const focused=document.activeElement&&ed.contains(document.activeElement);
+  if(focused){document.activeElement.blur();
+    if(matchMedia('(pointer: coarse)').matches)await settleViewport(450);}
   if(n&&edNew&&noteEmpty(n))S.notes=S.notes.filter(x=>x!==n);
   edId=null;edNew=false;sheetKind='';
-  if(document.activeElement&&ed.contains(document.activeElement))document.activeElement.blur();
-  save();render();
-  const done=()=>{if(ed.getAnimations)ed.getAnimations().forEach(x=>x.cancel());ed.hidden=true;ed.innerHTML='';ed.className='editor';edClosing=false;document.documentElement.classList.remove('ed-open')};
+  save();render();window.scrollTo(0,edScrollY);
+  const done=()=>{if(ed.getAnimations)ed.getAnimations().forEach(x=>x.cancel());ed.hidden=true;ed.innerHTML='';ed.className='editor';edClosing=false;
+    document.documentElement.classList.remove('ed-open');window.scrollTo(0,edScrollY)};
   if(RM.matches){done();return}
-  edClosing=true;ed.classList.add('closing');
   const card=id&&document.querySelector(`.card[data-open="${id}"]`);let a=null;
   if(card){const r=card.getBoundingClientRect();
     if(r.bottom>0&&r.top<innerHeight){
