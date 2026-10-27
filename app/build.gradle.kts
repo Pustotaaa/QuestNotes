@@ -1,8 +1,15 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose")
 }
+
+// Подпись.
+// app/debug.keystore — общий отладочный ключ, лежит в репозитории, чтобы любая сборка
+// (в GitHub Actions или у вас в Android Studio) ставилась поверх предыдущей без удаления.
+// Для публикации в Google Play заведите свой ключ: положите его в секреты репозитория
+// QN_KEYSTORE_BASE64 / QN_STORE_PASSWORD / QN_KEY_PASSWORD — workflow подхватит его сам.
+val keystorePath: String? = System.getenv("QN_KEYSTORE")
+val hasReleaseKey = keystorePath != null && file(keystorePath).exists()
 
 android {
     namespace = "com.questnotes.app"
@@ -12,13 +19,33 @@ android {
         applicationId = "com.questnotes.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1"
+        // номер сборки GitHub Actions, чтобы каждая новая версия ставилась поверх старой
+        versionCode = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInt() + 100
+        versionName = "0.2." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+        if (hasReleaseKey) {
+            create("release") {
+                storeFile = file(keystorePath!!)
+                storePassword = System.getenv("QN_STORE_PASSWORD")
+                keyAlias = System.getenv("QN_KEY_ALIAS") ?: "questnotes"
+                keyPassword = System.getenv("QN_KEY_PASSWORD")
+            }
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = if (hasReleaseKey) signingConfigs.getByName("release")
+            else signingConfigs.getByName("debug")
         }
     }
 
@@ -31,19 +58,14 @@ android {
         jvmTarget = "17"
     }
 
-    buildFeatures {
-        compose = true
+    androidResources {
+        // woff2 уже сжаты, не тратим время на повторное сжатие
+        noCompress += listOf("woff2")
     }
 }
 
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2024.10.01"))
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.activity:activity-compose:1.9.3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.foundation:foundation")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.activity:activity-ktx:1.9.3")
+    implementation("androidx.webkit:webkit:1.12.1")
 }

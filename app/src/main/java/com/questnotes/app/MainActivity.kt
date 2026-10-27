@@ -1,86 +1,150 @@
 package com.questnotes.app
 
-import android.graphics.Color as AndroidColor
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.webkit.JavascriptInterface
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
+import android.widget.FrameLayout
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
-import androidx.activity.compose.setContent
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.webkit.WebViewAssetLoader
+import androidx.webkit.WebViewClientCompat
 
+/**
+ * Обёртка над HTML-прототипом «Квест-заметки».
+ * Страница лежит в assets/index.html и открывается с локального https-адреса
+ * через WebViewAssetLoader, поэтому localStorage работает как в браузере
+ * и данные хранятся во внутренней памяти приложения.
+ */
 class MainActivity : ComponentActivity() {
+
+    private lateinit var root: FrameLayout
+    private lateinit var web: WebView
+    private var insetsJs = ""
+
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(AndroidColor.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.dark(AndroidColor.TRANSPARENT),
-        )
-        setContent {
-            QuestTheme {
-                App()
+
+        val loader = WebViewAssetLoader.Builder()
+            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
+            .build()
+
+        web = WebView(this).apply {
+            setBackgroundColor(Color.TRANSPARENT)
+            overScrollMode = View.OVER_SCROLL_NEVER
+            isVerticalScrollBarEnabled = false
+            settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true
+            settings.allowFileAccess = false
+            settings.allowContentAccess = false
+            settings.mediaPlaybackRequiresUserGesture = true
+            settings.textZoom = 100
+            addJavascriptInterface(Bridge(), "QNAndroid")
+            webViewClient = object : WebViewClientCompat() {
+                override fun shouldInterceptRequest(
+                    view: WebView,
+                    request: WebResourceRequest,
+                ): WebResourceResponse? = loader.shouldInterceptRequest(request.url)
+
+                override fun shouldOverrideUrlLoading(
+                    view: WebView,
+                    request: WebResourceRequest,
+                ): Boolean {
+                    if (request.url.host == WebViewAssetLoader.DEFAULT_DOMAIN) return false
+                    // внешние ссылки открываем в браузере, а не внутри приложения
+                    try {
+                        startActivity(Intent(Intent.ACTION_VIEW, request.url))
+                    } catch (_: ActivityNotFoundException) {
+                    }
+                    return true
+                }
+
+                override fun onPageFinished(view: WebView, url: String) {
+                    applyInsets()
+                }
             }
         }
+
+        root = FrameLayout(this).apply { addView(web) }
+        setContentView(root)
+
+        // Системные панели рисуются поверх страницы; их размеры передаём в CSS как --sa-*.
+        // Клавиатура уменьшает область WebView, чтобы поля ввода не прятались под ней.
+        ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            v.setPadding(0, 0, 0, ime.bottom)
+            val d = resources.displayMetrics.density
+            val bottom = if (ime.bottom > 0) 0f else bars.bottom / d
+            insetsJs = "(function(s){s.setProperty('--sa-top','${bars.top / d}px');" +
+                "s.setProperty('--sa-right','${bars.right / d}px');" +
+                "s.setProperty('--sa-bottom','${bottom}px');" +
+                "s.setProperty('--sa-left','${bars.left / d}px')})(document.documentElement.style)"
+            applyInsets()
+            WindowInsetsCompat.CONSUMED
+        }
+
+        // «Назад» сначала закрывает окна внутри страницы, и только потом выходит из приложения.
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                web.evaluateJavascript("(window.qnBack&&qnBack())?'yes':'no'") { result ->
+                    if (result != "\"yes\"") {
+                        isEnabled = false
+                        onBackPressedDispatcher.onBackPressed()
+                        isEnabled = true
+                    }
+                }
+            }
+        })
+
+        // всё состояние приложения живёт в localStorage, поэтому страницу просто открываем заново
+        web.loadUrl("https://${WebViewAssetLoader.DEFAULT_DOMAIN}/assets/index.html")
     }
-}
 
-@Composable
-fun App(store: NotesStore = viewModel()) {
-    // -1 — редактор закрыт, иначе id открытой заметки
-    var editingId by rememberSaveable { mutableStateOf(-1L) }
-    var showRpg by rememberSaveable { mutableStateOf(false) }
-    val snackbar = remember { SnackbarHostState() }
-
-    LaunchedEffect(store.toast) {
-        val t = store.toast
-        if (t != null) {
-            snackbar.showSnackbar(t.text, duration = SnackbarDuration.Short)
-            if (store.toast === t) store.toast = null
-        }
+    private fun applyInsets() {
+        if (insetsJs.isNotEmpty()) web.evaluateJavascript(insetsJs, null)
     }
 
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(KeepBg),
-    ) {
-        // Список заметок всегда остаётся под остальными экранами,
-        // поэтому поиск и прокрутка сохраняются после возврата.
-        NotesScreen(
-            store = store,
-            onOpen = { editingId = it },
-            onNew = { editingId = System.currentTimeMillis() },
-            onRpg = { showRpg = true },
-        )
+    override fun onPause() {
+        web.onPause()
+        super.onPause()
+    }
 
-        if (showRpg) {
-            RpgScreen(store = store, onBack = { showRpg = false })
+    override fun onResume() {
+        super.onResume()
+        web.onResume()
+    }
+
+    override fun onDestroy() {
+        root.removeView(web)
+        web.destroy()
+        super.onDestroy()
+    }
+
+    private inner class Bridge {
+        /** Тёмные иконки статус-бара на светлой теме страницы и светлые на тёмной. */
+        @JavascriptInterface
+        fun setBars(lightBackground: Boolean) {
+            runOnUiThread {
+                WindowCompat.getInsetsController(window, window.decorView).apply {
+                    isAppearanceLightStatusBars = lightBackground
+                    isAppearanceLightNavigationBars = lightBackground
+                }
+            }
         }
-
-        if (editingId != -1L) {
-            EditorScreen(store = store, noteId = editingId, onClose = { editingId = -1L })
-        }
-
-        SnackbarHost(
-            hostState = snackbar,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .navigationBarsPadding(),
-        )
     }
 }
