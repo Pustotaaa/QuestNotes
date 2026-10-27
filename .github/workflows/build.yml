@@ -47,7 +47,7 @@ jobs:
       - name: Name APK
         run: |
           mkdir -p out
-          cp app/build/outputs/apk/release/app-release.apk "out/QuestNotes-0.2.${GITHUB_RUN_NUMBER}.apk"
+          cp app/build/outputs/apk/release/app-release.apk "out/ZametkiQQ-0.2.${GITHUB_RUN_NUMBER}.apk"
           ls -la out
 
       - uses: actions/upload-artifact@v4
@@ -61,7 +61,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v0.2.${{ github.run_number }}
-          name: Квест-заметки 0.2.${{ github.run_number }}
+          name: Заметки qq 0.2.${{ github.run_number }}
           target_commitish: ${{ github.sha }}
           make_latest: true
           body: |

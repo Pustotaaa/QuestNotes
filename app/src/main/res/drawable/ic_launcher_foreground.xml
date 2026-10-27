@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Блокнот с красным пером. Исходник: tools/icon.svg -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path android:fillColor="#33E0A22E" android:pathData="M54,54m-30,0a30,30 0,1 1,60 0a30,30 0,1 1,-60 0" />
-    <path android:fillColor="#2A1A10" android:pathData="M33,36.5h3.5v3.5h-3.5zM36.5,36.5h3.5v3.5h-3.5zM40,36.5h3.5v3.5h-3.5zM43.5,36.5h3.5v3.5h-3.5zM47,36.5h3.5v3.5h-3.5zM50.5,36.5h3.5v3.5h-3.5zM54,36.5h3.5v3.5h-3.5zM57.5,36.5h3.5v3.5h-3.5zM61,36.5h3.5v3.5h-3.5zM64.5,36.5h3.5v3.5h-3.5zM68,36.5h3.5v3.5h-3.5zM71.5,36.5h3.5v3.5h-3.5zM29.5,40h3.5v3.5h-3.5zM75,40h3.5v3.5h-3.5zM29.5,43.5h3.5v3.5h-3.5zM75,43.5h3.5v3.5h-3.5zM29.5,47h3.5v3.5h-3.5zM75,47h3.5v3.5h-3.5zM29.5,50.5h3.5v3.5h-3.5zM75,50.5h3.5v3.5h-3.5zM29.5,54h3.5v3.5h-3.5zM75,54h3.5v3.5h-3.5zM29.5,57.5h3.5v3.5h-3.5zM75,57.5h3.5v3.5h-3.5zM29.5,61h3.5v3.5h-3.5zM75,61h3.5v3.5h-3.5zM29.5,64.5h3.5v3.5h-3.5zM75,64.5h3.5v3.5h-3.5zM29.5,68h3.5v3.5h-3.5zM75,68h3.5v3.5h-3.5zM33,71.5h3.5v3.5h-3.5zM36.5,71.5h3.5v3.5h-3.5zM40,71.5h3.5v3.5h-3.5zM43.5,71.5h3.5v3.5h-3.5zM47,71.5h3.5v3.5h-3.5zM50.5,71.5h3.5v3.5h-3.5zM54,71.5h3.5v3.5h-3.5zM57.5,71.5h3.5v3.5h-3.5zM61,71.5h3.5v3.5h-3.5zM64.5,71.5h3.5v3.5h-3.5zM68,71.5h3.5v3.5h-3.5zM71.5,71.5h3.5v3.5h-3.5z" />
-    <path android:fillColor="#7A4E26" android:pathData="M33,40h3.5v3.5h-3.5zM36.5,40h3.5v3.5h-3.5zM40,40h3.5v3.5h-3.5zM43.5,40h3.5v3.5h-3.5zM47,40h3.5v3.5h-3.5zM50.5,40h3.5v3.5h-3.5zM54,40h3.5v3.5h-3.5zM57.5,40h3.5v3.5h-3.5zM61,40h3.5v3.5h-3.5zM64.5,40h3.5v3.5h-3.5zM68,40h3.5v3.5h-3.5zM71.5,40h3.5v3.5h-3.5zM33,43.5h3.5v3.5h-3.5zM71.5,43.5h3.5v3.5h-3.5zM33,47h3.5v3.5h-3.5zM71.5,47h3.5v3.5h-3.5zM33,54h3.5v3.5h-3.5zM71.5,54h3.5v3.5h-3.5zM33,57.5h3.5v3.5h-3.5zM71.5,57.5h3.5v3.5h-3.5zM33,61h3.5v3.5h-3.5zM71.5,61h3.5v3.5h-3.5zM33,64.5h3.5v3.5h-3.5zM71.5,64.5h3.5v3.5h-3.5zM33,68h3.5v3.5h-3.5zM36.5,68h3.5v3.5h-3.5zM40,68h3.5v3.5h-3.5zM43.5,68h3.5v3.5h-3.5zM47,68h3.5v3.5h-3.5zM50.5,68h3.5v3.5h-3.5zM54,68h3.5v3.5h-3.5zM57.5,68h3.5v3.5h-3.5zM61,68h3.5v3.5h-3.5zM64.5,68h3.5v3.5h-3.5zM68,68h3.5v3.5h-3.5zM71.5,68h3.5v3.5h-3.5z" />
-    <path android:fillColor="#AE763C" android:pathData="M36.5,43.5h3.5v3.5h-3.5zM40,43.5h3.5v3.5h-3.5zM43.5,43.5h3.5v3.5h-3.5zM47,43.5h3.5v3.5h-3.5zM50.5,43.5h3.5v3.5h-3.5zM54,43.5h3.5v3.5h-3.5zM57.5,43.5h3.5v3.5h-3.5zM61,43.5h3.5v3.5h-3.5zM64.5,43.5h3.5v3.5h-3.5zM68,43.5h3.5v3.5h-3.5zM36.5,47h3.5v3.5h-3.5zM40,47h3.5v3.5h-3.5zM43.5,47h3.5v3.5h-3.5zM47,47h3.5v3.5h-3.5zM50.5,47h3.5v3.5h-3.5zM54,47h3.5v3.5h-3.5zM57.5,47h3.5v3.5h-3.5zM61,47h3.5v3.5h-3.5zM64.5,47h3.5v3.5h-3.5zM68,47h3.5v3.5h-3.5zM36.5,54h3.5v3.5h-3.5zM40,54h3.5v3.5h-3.5zM43.5,54h3.5v3.5h-3.5zM47,54h3.5v3.5h-3.5zM57.5,54h3.5v3.5h-3.5zM61,54h3.5v3.5h-3.5zM64.5,54h3.5v3.5h-3.5zM68,54h3.5v3.5h-3.5zM36.5,57.5h3.5v3.5h-3.5zM40,57.5h3.5v3.5h-3.5zM43.5,57.5h3.5v3.5h-3.5zM61,57.5h3.5v3.5h-3.5zM64.5,57.5h3.5v3.5h-3.5zM68,57.5h3.5v3.5h-3.5zM36.5,61h3.5v3.5h-3.5zM40,61h3.5v3.5h-3.5zM43.5,61h3.5v3.5h-3.5zM47,61h3.5v3.5h-3.5zM57.5,61h3.5v3.5h-3.5zM61,61h3.5v3.5h-3.5zM64.5,61h3.5v3.5h-3.5zM68,61h3.5v3.5h-3.5zM36.5,64.5h3.5v3.5h-3.5zM40,64.5h3.5v3.5h-3.5zM43.5,64.5h3.5v3.5h-3.5zM47,64.5h3.5v3.5h-3.5zM50.5,64.5h3.5v3.5h-3.5zM54,64.5h3.5v3.5h-3.5zM57.5,64.5h3.5v3.5h-3.5zM61,64.5h3.5v3.5h-3.5zM64.5,64.5h3.5v3.5h-3.5zM68,64.5h3.5v3.5h-3.5z" />
-    <path android:fillColor="#E2B04E" android:pathData="M33,50.5h3.5v3.5h-3.5zM36.5,50.5h3.5v3.5h-3.5zM40,50.5h3.5v3.5h-3.5zM43.5,50.5h3.5v3.5h-3.5zM47,50.5h3.5v3.5h-3.5zM50.5,50.5h3.5v3.5h-3.5zM54,50.5h3.5v3.5h-3.5zM57.5,50.5h3.5v3.5h-3.5zM61,50.5h3.5v3.5h-3.5zM64.5,50.5h3.5v3.5h-3.5zM68,50.5h3.5v3.5h-3.5zM71.5,50.5h3.5v3.5h-3.5zM50.5,54h3.5v3.5h-3.5zM54,54h3.5v3.5h-3.5zM47,57.5h3.5v3.5h-3.5zM57.5,57.5h3.5v3.5h-3.5zM50.5,61h3.5v3.5h-3.5zM54,61h3.5v3.5h-3.5z" />
-    <path android:fillColor="#4A2E0E" android:pathData="M50.5,57.5h3.5v3.5h-3.5zM54,57.5h3.5v3.5h-3.5z" />
+    <group android:pivotX="54" android:pivotY="54" android:scaleX="0.7" android:scaleY="0.7">
+        <group android:translateX="-10.5" android:translateY="-1.5">
+            <path android:fillColor="#D9A21B" android:pathData="M36,27h36a5,5 0 0 1 5,5v50a5,5 0 0 1 -5,5h-36a5,5 0 0 1 -5,-5v-50a5,5 0 0 1 5,-5z" />
+            <path android:fillColor="#FFFDF7" android:pathData="M33,24h36a5,5 0 0 1 5,5v50a5,5 0 0 1 -5,5h-36a5,5 0 0 1 -5,-5v-50a5,5 0 0 1 5,-5z" />
+            <path android:fillColor="#2F3B52" android:pathData="M33,24a5,5 0 0 0 -5,5v50a5,5 0 0 0 5,5h3V24z" />
+            <path android:strokeColor="#C9D2DC" android:strokeWidth="2.2" android:strokeLineCap="round" android:pathData="M42,37h24M42,45h24M42,53h24M42,61h16" />
+            <path android:strokeColor="#F2A7A7" android:strokeWidth="1.4" android:pathData="M40,30v50" />
+            <path android:fillColor="#FFFDF7" android:pathData="M32,30.4a1.6,1.6 0 1 1 0,3.2a1.6,1.6 0 1 1 0,-3.2zM32,40.4a1.6,1.6 0 1 1 0,3.2a1.6,1.6 0 1 1 0,-3.2zM32,50.4a1.6,1.6 0 1 1 0,3.2a1.6,1.6 0 1 1 0,-3.2zM32,60.4a1.6,1.6 0 1 1 0,3.2a1.6,1.6 0 1 1 0,-3.2zM32,70.4a1.6,1.6 0 1 1 0,3.2a1.6,1.6 0 1 1 0,-3.2z" />
+            <path android:strokeColor="#2F3B52" android:strokeWidth="1.8" android:strokeLineCap="round" android:pathData="M48,72c3,-3 5,2 8,-1s5,1 7,-1" />
+            <group android:translateX="64" android:translateY="71" android:rotation="-52">
+            <path android:fillColor="#E5383B" android:pathData="M9,0C17,-10 36,-14 54,-7C47,-4 46,-1 54,1C37,9 18,8 9,0Z" />
+            <path android:fillColor="#B5171E" android:pathData="M9,0C18,8 37,9 54,1C47,-1 47,0 46,0Z" />
+            <path android:strokeColor="#B5171E" android:strokeWidth="1.4" android:strokeLineCap="round" android:pathData="M24,-8l4,4M33,-10l4,5M42,-10l3,5" />
+            <path android:strokeColor="#FFF3E0" android:strokeWidth="1.6" android:strokeLineCap="round" android:pathData="M1,0L56,-2" />
+            <path android:fillColor="#2F3B52" android:pathData="M-2,0L8,-2.4L8,2.4Z" />
+            </group>
+        </group>
+    </group>
 </vector>

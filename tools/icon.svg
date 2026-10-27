@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="432" height="432">
+  <rect width="108" height="108" fill="#F4C542"/>
+  <!-- тень блокнота -->
+  <rect x="31" y="27" width="46" height="60" rx="5" fill="#D9A21B"/>
+  <!-- блокнот -->
+  <rect x="28" y="24" width="46" height="60" rx="5" fill="#FFFDF7"/>
+  <path d="M33 24h-0a5 5 0 0 0-5 5v50a5 5 0 0 0 5 5h3V24z" fill="#2F3B52"/>
+  <g fill="none" stroke="#C9D2DC" stroke-width="2.2" stroke-linecap="round">
+    <path d="M42 37h24"/><path d="M42 45h24"/><path d="M42 53h24"/><path d="M42 61h16"/>
+  </g>
+  <path d="M40 30v50" stroke="#F2A7A7" stroke-width="1.4"/>
+  <g fill="#FFFDF7"><circle cx="32" cy="32" r="1.6"/><circle cx="32" cy="42" r="1.6"/><circle cx="32" cy="52" r="1.6"/><circle cx="32" cy="62" r="1.6"/><circle cx="32" cy="72" r="1.6"/></g>
+  <!-- чернильный росчерк -->
+  <path d="M48 72c3-3 5 2 8-1s5 1 7-1" fill="none" stroke="#2F3B52" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- красное перо -->
+  <g transform="translate(64 71) rotate(-52)">
+    <path d="M9 0C17 -10 36 -14 54 -7C47 -4 46 -1 54 1C37 9 18 8 9 0Z" fill="#E5383B"/>
+    <path d="M9 0C18 8 37 9 54 1C47 -1 47 0 46 0Z" fill="#B5171E"/>
+    <path d="M24 -8l4 4M33 -10l4 5M42 -10l3 5" stroke="#B5171E" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M1 0L56 -2" stroke="#FFF3E0" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M-2 0L8 -2.4L8 2.4Z" fill="#2F3B52"/>
+  </g>
+</svg>
