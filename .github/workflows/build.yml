@@ -3,7 +3,6 @@ name: Build APK
 on:
   push:
     branches: [ main ]
-    tags: [ 'v*' ]
   pull_request:
   workflow_dispatch:
 
@@ -56,9 +55,16 @@ jobs:
           name: QuestNotes-apk
           path: out/*.apk
 
-      # Тег вида v0.2.0 публикует APK в разделе Releases — оттуда его удобно скачать прямо на телефон
+      # Каждый push в main публикует APK в разделе Releases — оттуда его удобно скачать прямо на телефон
       - name: Publish release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v0.2.${{ github.run_number }}
+          name: Квест-заметки 0.2.${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          make_latest: true
+          body: |
+            Сборка из коммита ${{ github.sha }}.
+            Скачайте APK ниже и откройте на телефоне. Новая версия ставится поверх старой, данные сохраняются.
           files: out/*.apk
